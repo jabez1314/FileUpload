@@ -16,11 +16,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
-    post4()
+    post5()
     
     return true
   }
   
+  /**
+    */
+  func post6() {
+//    upload(.POST, "http://192.168.199.249/~jabez/test/exercise/01/fileUpload2.php", headers: ["Content-Type": contentType], multipartFormData: { (form) -> Void in
+//      
+//      }, encodingMemoryThreshold: Int.max) { (result) -> Void in
+//        
+//    }
+  }
+  
+  /*
+  post using alamofire
+  good
+*/
+  func post5() {
+    
+    let first_name = "ha2h"
+    let image_name = "ha2ha2.png"
+    let imageData = uploadImageData()
+    
+    
+    let boundary = "14737809831466499882746641449"
+    let contentType = "multipart/form-data; boundary=\(boundary)"
+    
+    let body = NSMutableData()
+    body.appendData(dataWith("\r\n--\(boundary)\r\n"))
+    body.appendData(dataWith("Content-Disposition: form-data; name=\"nickname\"\r\n\r\n"))
+    body.appendData(dataWith("\(first_name)"))
+    
+    body.appendData(dataWith("\r\n--\(boundary)\r\n"))
+    body.appendData(dataWith("Content-Disposition: form-data; name=\"world2\"\r\n\r\n"))
+    body.appendData(dataWith("good2"))
+    
+    
+    body.appendData(dataWith("\r\n--\(boundary)\r\n"))
+    
+    body.appendData(dataWith("Content-Disposition: form-data; name=\"image\"; filename=\"\(image_name)\"\r\n"))
+    body.appendData(dataWith("Content-Type: application/octet-stream\r\n\r\n"))
+    body.appendData(imageData)
+    body.appendData(dataWith("\r\n--\(boundary)--\r\n"))
+    
+    upload(.POST, "http://192.168.199.249/~jabez/test/exercise/01/fileUpload2.php", headers: ["Content-Type": contentType], stream: NSInputStream(data: body)).response { (request, response, data, error) -> Void in
+      if error != nil {
+        print("error: \(error)")
+      } else {
+        let str = NSString(data: data!, encoding: NSUTF8StringEncoding)
+        print("str: \(str)")
+      }
+    }
+  }
   
   /**
   good
