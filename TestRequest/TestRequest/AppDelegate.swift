@@ -22,6 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   
+  /**
+  good
+  
+  see http://stackoverflow.com/questions/936855/file-upload-to-http-server-in-iphone-programming
+  
+  see https://github.com/jabez1314/Json-Sample/blob/master/Json%20Sample/ViewController.m
+*/
   func post4() {
     let url: NSURL = NSURL(string: "http://192.168.199.249/~jabez/test/exercise/01/fileUpload2.php")!
     let first_name = "hah"
@@ -52,7 +59,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     body.appendData(imageData)
     body.appendData(dataWith("\r\n--\(boundary)--\r\n"))
     
-    request.HTTPBody = body
+    let useStream = true
+    
+    if useStream {
+      request.HTTPBodyStream = NSInputStream(data: body)
+    } else {
+      request.HTTPBody = body
+    }
+    
     
     NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue()) { (Response, data, error) -> Void in
       if error != nil {
